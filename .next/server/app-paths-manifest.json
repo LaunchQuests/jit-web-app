@@ -1,0 +1,10 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/csrf/route": "app/api/csrf/route.js",
+  "/api/export/[id]/route": "app/api/export/[id]/route.js",
+  "/admin/page": "app/admin/page.js",
+  "/admin/showrooms/[id]/page": "app/admin/showrooms/[id]/page.js",
+  "/follow-ups/page": "app/follow-ups/page.js",
+  "/login/page": "app/login/page.js",
+  "/page": "app/page.js"
+}

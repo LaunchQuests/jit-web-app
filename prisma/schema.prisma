@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  SHOWROOM
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+model Showroom {
+  id        String     @id @default(cuid())
+  storeName String
+  status    Status     @default(ACTIVE)
+  createdAt DateTime   @default(now())
+  users     User[]
+  followUps FollowUp[]
+
+  @@map("showrooms")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  username     String    @unique
+  passwordHash String    @map("password")
+  role         Role
+  showroomId   String?   @map("showroom_id")
+  status       Status    @default(ACTIVE)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  showroom     Showroom? @relation(fields: [showroomId], references: [id], onDelete: Cascade)
+
+  @@index([showroomId])
+  @@map("users")
+}
+
+model FollowUp {
+  id               String    @id @default(cuid())
+  showroomId       String    @map("showroom_id")
+  date             DateTime
+  salespersonName  String    @map("salesperson_name")
+  customerName     String    @map("customer_name")
+  phoneNumber      String    @map("phone_number")
+  remarks          String
+  lastFollowupDate DateTime? @map("last_followup_date")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  showroom         Showroom  @relation(fields: [showroomId], references: [id], onDelete: Cascade)
+
+  @@index([showroomId, date(sort: Desc)])
+  @@index([customerName])
+  @@index([phoneNumber])
+  @@index([salespersonName])
+  @@map("followups")
+}
